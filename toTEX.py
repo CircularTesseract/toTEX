@@ -2,32 +2,47 @@ import sys
 import os
 import re
 import time
+import subprocess
+import shlex
 
-def convert(inFile, outFile):
+def convert(inFile, outFile, outfilepath, root):
     #@param takes a pointer to the origin file and the output file
     outFile.write('\\documentclass[12pt]{article}\n')
     #TODO make a configurable file for imports <- HERE
     outFile.write ('\\begin{document}\n')
     #TODO make a the same configurable file do author <- HERE
-    outFile.write('\\title{Latex'+time.strftime("%c") + '}')
-    outFile.write('\\maketitle')
-    for line in inFile.readlines():
+    outFile.write('\\title{Latex'+time.strftime("%c") + '}\n')
+    outFile.write('\\maketitle\n')
+    for line in inFile:
+        if line[0] == '-':
+            outFile.write(line+'\\\\')
+    outFile.write('i\n\\end{document}')
+    command= 'pdflatex ' + outfilepath
+    os.chdir(root)
+    proc= subprocess.Popen(shlex.split(command))
+    proc.communicate
+    return
 
-def comp(filepath):
+
+
+def comp(filepath, root):
     #takes the path to a .txt file and dynamically generates the latex file
     outpath = filepath.rstrip('.txt')+'.tex'
-    try:
+    if True:
         f = open(filepath, 'r')
         if not os.path.isfile(outpath):
+            print outpath
+            print filepath
             #texfile does not exists
             out = open(outpath, 'w')
-            convert(f, out)
-        elif os.path.getmtime(filepath) > os.path.getmtime(outpath):
+            convert(f, out, outpath, root)
+        elif True: #os.path.getmtime(filepath) > os.path.getmtime(outpath):
             #proceed normally
-            convert(f, out)
+            out = open(outpath, 'w')
+            convert(f, out, outpath, root)
         else:
             return
-    except:
+    if False:
         print "error in opening files for compilation, exiting"
     return
 
@@ -61,7 +76,7 @@ def default( list ):
                     #we handle the sub directories first
                     for tfile in files:
                         if tfile.endswith(".txt" ):
-                            comp(os.path.join(root, tfile))
+                            comp(os.path.join(root, tfile), root)
                         else:
                             #this is not thefile you are looking for!
                             continue
