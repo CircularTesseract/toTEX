@@ -14,8 +14,7 @@ def convert(inFile, outFile, outfilepath, root):
     outFile.write('\\title{Latex'+time.strftime("%c") + '}\n')
     outFile.write('\\maketitle\n')
     for line in inFile:
-        if line[0] == '-':
-            outFile.write(line+'\\\\')
+    	outFile.write(line+'\\\\')
     outFile.write('i\n\\end{document}')
     command= 'pdflatex ' + outfilepath
     os.chdir(root)
@@ -28,7 +27,7 @@ def convert(inFile, outFile, outfilepath, root):
 def comp(filepath, root):
     #takes the path to a .txt file and dynamically generates the latex file
     outpath = filepath.rstrip('.txt')+'.tex'
-    if True:
+    try:
         f = open(filepath, 'r')
         if not os.path.isfile(outpath):
             print outpath
@@ -42,7 +41,7 @@ def comp(filepath, root):
             convert(f, out, outpath, root)
         else:
             return
-    if False:
+    except:
         print "error in opening files for compilation, exiting"
     return
 
