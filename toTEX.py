@@ -11,7 +11,7 @@ def convert(inFile, outFile, outfilepath, root):
     #TODO make a configurable file for imports <- HERE
     outFile.write ('\\begin{document}\n')
     #TODO make a the same configurable file do author <- HERE
-    outFile.write('\\title{Latex'+time.strftime("%c") + '}\n')
+    outFile.write('\\title{Latex'+ outfilepath.rstrip(".tex") + '}\n')
     outFile.write('\\maketitle\n')
     for line in inFile:
     	outFile.write(line+'\\\\')
@@ -20,6 +20,7 @@ def convert(inFile, outFile, outfilepath, root):
     os.chdir(root)
     proc= subprocess.Popen(shlex.split(command))
     proc.communicate
+    os.remove
     return
 
 
@@ -35,7 +36,7 @@ def comp(filepath, root):
             #texfile does not exists
             out = open(outpath, 'w')
             convert(f, out, outpath, root)
-        elif True: #os.path.getmtime(filepath) > os.path.getmtime(outpath):
+        elif os.path.getmtime(filepath) > os.path.getmtime(outpath):
             #proceed normally
             out = open(outpath, 'w')
             convert(f, out, outpath, root)
