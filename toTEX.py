@@ -5,11 +5,22 @@ import time
 import subprocess
 import shlex
 
+#constant parameter set to the original working directory
+originPath=""
+
 def convert(inFile, outFile, outfilepath, root):
     #@param takes a pointer to the origin file and the output file
+    try:
+	f = open( os.path.join(originPath,"imports.conf"), 'r')
+    except:
+	print "File structure damaged please run setup.py"
+	sys.exit();
+    for line in f:
+	outFile.write("\include{" + line.rstrip('\n') + '}\n')
+	 
+    
     outFile.write('\\documentclass[12pt]{article}\n')
-    #TODO make a configurable file for imports <- HERE
-    outFile.write ('\\begin{document}\n')
+    outFile.write('\\begin{document}\n')
     #TODO make a the same configurable file do author <- HERE
     outFile.write('\\title{Latex'+ outfilepath.rstrip(".tex") + '}\n')
     outFile.write('\\maketitle\n')
@@ -53,6 +64,7 @@ def default( list ):
     #Default only looks at the directories who's id's are in the list provided
     #Default assumes that the .conf file exists
     flag = False
+    originPath = os.getcwd()
     try:
         f = open(os.path.join(os.getcwd(), 'toTEX.conf'), 'r')
     except:
