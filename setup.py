@@ -1,6 +1,14 @@
 import os
 import sys
 
+
+if not os.path.isfile(os.getcwd() + "/imports.conf"):
+	#imports file is missing,generate empty file
+	f=open(os.getcwd() + "/imports.conf", 'w')
+	print "generated empty import configuration file"
+
+
+
 #Note it is assumed that the structure of the
 #toTEX folders are not modified
 if not os.path.isfile(os.getcwd() + "/toTEX.conf"):
