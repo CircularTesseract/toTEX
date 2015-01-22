@@ -11,21 +11,29 @@ originPath=""
 def convert(inFile, outFile, outfilepath, root):
     #@param takes a pointer to the origin file and the output file
     try:
-	f = open( os.path.join(originPath,"imports.conf"), 'r')
+        f = open( os.path.join(originPath,"imports.conf"), 'r')
     except:
-	print "File structure damaged please run setup.py"
-	sys.exit();
+        print "File structure damaged please run setup.py"
+        sys.exit()
     for line in f:
-	outFile.write("\include{" + line.rstrip('\n') + '}\n')
-	 
+        outFile.write("\include{" + line.rstrip('\n') + '}\n')
+     
     
     outFile.write('\\documentclass[12pt]{article}\n')
     outFile.write('\\begin{document}\n')
-    #TODO make a the same configurable file do author <- HERE
+
+    try:
+        f2= open( os.path.join(originPath,"user.conf"), 'r')    
+    except:
+        print "File structure damaged please run setup.py"
+        sys.exit()    
+    for line in f2:
+        outfile.write("\\author{" + line.rstrip('\n') + "}\n")
+
     outFile.write('\\title{Latex'+ outfilepath.rstrip(".tex") + '}\n')
     outFile.write('\\maketitle\n')
     for line in inFile:
-    	outFile.write(line+'\\\\')
+        outFile.write(line+'\\\\')
     outFile.write('i\n\\end{document}')
     command= 'pdflatex ' + outfilepath
     os.chdir(root)
