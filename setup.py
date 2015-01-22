@@ -7,6 +7,12 @@ if not os.path.isfile(os.getcwd() + "/imports.conf"):
 	f=open(os.getcwd() + "/imports.conf", 'w')
 	print "generated empty import configuration file"
 
+if not os.path.isfile(os.getcwd() + "/user.conf"):
+	f=open(os.getcwd() + "/user.conf",'w')
+	print "generated user configuration file"
+	print "enter desired author:"
+	data = sys.stdin.readline()
+	f.write(data.rstrip('\n'))
 
 
 #Note it is assumed that the structure of the
