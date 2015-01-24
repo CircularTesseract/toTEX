@@ -32,9 +32,15 @@ def convert(inFile, outFile, outfilepath, root):
 
     outFile.write('\\title{Latex'+ outfilepath.rstrip(".tex") + '}\n')
     outFile.write('\\maketitle\n')
+    outFile.write('\\begin{itemize}')
     for line in inFile:
-        outFile.write(line+'\\\\')
-    outFile.write('i\n\\end{document}')
+	if line[0] == 'i':
+	    outFile.write( '\\item\n' + line[1:])  
+	else:
+            outFile.write(line+'\\\\')
+ 
+    outFile.write('\\end{itemize}')
+    outFile.write('\n\\end{document}')
     command= 'pdflatex ' + outfilepath
     os.chdir(root)
     proc= subprocess.Popen(shlex.split(command))
