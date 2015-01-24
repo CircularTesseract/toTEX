@@ -9,6 +9,7 @@ import shlex
 originPath=""
 
 def convert(inFile, outFile, outfilepath, root):
+    print "converting: " + outfilepath
     #@param takes a pointer to the origin file and the output file
     try:
         f = open( os.path.join(originPath,"imports.conf"), 'r')
@@ -28,18 +29,28 @@ def convert(inFile, outFile, outfilepath, root):
         print "File structure damaged please run setup.py"
         sys.exit()    
     for line in f2:
-        outfile.write("\\author{" + line.rstrip('\n') + "}\n")
+        outFile.write("\\author{" + line.rstrip('\n') + "}\n")
 
     outFile.write('\\title{Latex'+ outfilepath.rstrip(".tex") + '}\n')
     outFile.write('\\maketitle\n')
-    outFile.write('\\begin{itemize}')
+    flag = False
     for line in inFile:
-	if line[0] == 'i':
-	    outFile.write( '\\item\n' + line[1:])  
+	line = line.lstrip()
+	if line[0] == '-':
+	    if not flag:
+                outFile.write('\\begin{enumerate}\n')
+                flag = True
+	    outFile.write('\\item\n' + line[1:])  
 	else:
-            outFile.write(line+'\\\\')
- 
-    outFile.write('\\end{itemize}')
+            if flag:
+                outFile.write('\\end{enumerate')
+                flag = False
+	    if line[0] != '-' and line[0] != '\n':
+            	outFile.write(line)
+
+    if flag:
+	outFile.write('\n\\end{enumerate}')
+	
     outFile.write('\n\\end{document}')
     command= 'pdflatex ' + outfilepath
     os.chdir(root)
@@ -52,7 +63,7 @@ def convert(inFile, outFile, outfilepath, root):
 
 def comp(filepath, root):
     #takes the path to a .txt file and dynamically generates the latex file
-    outpath = filepath.rstrip('.txt')+'.tex'
+    outpath = (filepath.rstrip('.txt')+'.tex').rstrip('\n')
     try:
         f = open(filepath, 'r')
         if not os.path.isfile(outpath):
@@ -68,7 +79,7 @@ def comp(filepath, root):
         else:
             return
     except:
-        print "error in opening files for compilation, exiting"
+        print "error in opening files for compilation, exiting " + outpath
     return
 
 
