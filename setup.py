@@ -5,7 +5,10 @@ import sys
 if not os.path.isfile(os.getcwd() + "/imports.conf"):
 	#imports file is missing,generate empty file
 	f=open(os.getcwd() + "/imports.conf", 'w')
-	print "generated empty import configuration file"
+	print "please enter the import you wish to have globally included"
+	line = sys.stdin.readline()
+	f.write(line)
+	print "generated import configuration"
 
 if not os.path.isfile(os.getcwd() + "/user.conf"):
 	f=open(os.getcwd() + "/user.conf",'w')
